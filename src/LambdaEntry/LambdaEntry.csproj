@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <AWSProjectType>Lambda</AWSProjectType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Amazon.Lambda.Core" Version="1.0.0" />
+    <PackageReference Include="Amazon.Lambda.Serialization.Json" Version="1.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.1.1" />
+    <PackageReference Include="Amazon.Lambda.KinesisEvents" Version="1.0.1" />
+    <PackageReference Include="Amazon.Lambda.S3Events" Version="1.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GenericProcessor\GenericProcessor.csproj" />
+    <ProjectReference Include="..\Initialization\Initialization.csproj" />
+    <ProjectReference Include="..\S3Processor\S3Processor.csproj" />
+  </ItemGroup>
+
+</Project>
