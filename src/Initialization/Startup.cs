@@ -11,7 +11,7 @@ using S3Processor;
 
 namespace Initialization
 {
-    public class Startup
+    public static class Startup
     {
         public static IHost Host { get; }
 
@@ -22,12 +22,14 @@ namespace Initialization
                 {
                     config.SetBasePath(Directory.GetCurrentDirectory());
                     config.AddEnvironmentVariables();
+                    config.AddJsonFile("appsettings.json");
                 })
                 .ConfigureAppConfiguration((context, config) => { context.HostingEnvironment.ApplicationName = "LambdaWithStartup"; })
                 .UseEnvironment(EnvironmentName.Development)
                 .ConfigureServices((context, services) =>
                 {
-                    services.AddLogging(); 
+                    services.AddLogging();
+                    services.Configure<StringFunctionsConfiguration>(context.Configuration.GetSection("StringFunctionsConfiguration"));
                 })
                 .ConfigureLogging((context, logging) =>
                 {
@@ -35,11 +37,11 @@ namespace Initialization
                     logging.AddDebug();
                 })
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                .ConfigureContainer<ContainerBuilder>((context, container) =>
+                .ConfigureContainer<ContainerBuilder>((context, builder) =>
                 {
-                    container.RegisterType<AmazonS3Client>().As<IAmazonS3>();
-                    container.RegisterType<S3Functions>().AsSelf();
-                    container.RegisterType<StringFunctions>().AsSelf();
+                    builder.RegisterType<AmazonS3Client>().As<IAmazonS3>();
+                    builder.RegisterType<S3Functions>().AsSelf();
+                    builder.RegisterType<StringFunctions>().AsSelf();
                 });
             Host = hostBuilder.Build();
         }

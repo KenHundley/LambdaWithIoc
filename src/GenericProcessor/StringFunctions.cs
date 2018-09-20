@@ -1,17 +1,21 @@
 ﻿using System;
+using System.ComponentModel.Design;
 using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace GenericProcessor
 {
     public class StringFunctions
     {
         private readonly ILogger<StringFunctions> logger;
+        private readonly IOptions<StringFunctionsConfiguration> config;
 
-        public StringFunctions(ILogger<StringFunctions> logger)
+        public StringFunctions(ILogger<StringFunctions> logger, IOptions<StringFunctionsConfiguration> config)
         {
             this.logger = logger;
+            this.config = config;
         }
 
         /// <summary>
@@ -38,5 +42,10 @@ namespace GenericProcessor
 
             return input?.ToUpper();
         }
+    }
+
+    public class StringFunctionsConfiguration
+    {
+        public string ApplicationName { get; set; }
     }
 }
