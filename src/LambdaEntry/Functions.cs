@@ -23,13 +23,27 @@ namespace LambdaEntry
             this.host = host;
         }
 
-        public Task<string> S3FunctionHandlerAsync(S3Event s3Event, ILambdaContext context) => ExecuteWithScopeAsync<S3Functions, string>(function => function.S3FunctionHandlerAsync(s3Event, context));
-
-        public Task<string> ToUpperFunctionHandlerAsync(string input, ILambdaContext context) => ExecuteWithScopeAsync<StringFunctions, string>(function => function.ToUpperFunctionHandlerAsync(input, context));
-        
-        private async Task<TR> ExecuteWithScopeAsync<TS, TR>(Func<TS, Task<TR>> predicate)
+        public Task<string> S3FunctionHandlerAsync(S3Event s3Event, ILambdaContext context)
         {
-            using (var scope = this.host.Services.CreateScope())
+            return this.host.ExecuteWithScopeAsync<S3Functions, string>(function => function.S3FunctionHandlerAsync(s3Event, context));
+        }
+
+        public Task<string> ToUpperFunctionHandlerAsync(string input, ILambdaContext context)
+        {
+            return this.host.ExecuteWithScopeAsync<StringFunctions, string>(functions => functions.ToUpperFunctionHandlerAsync(input, context));
+        }
+		
+        public Task<string> ToUpperFunctionWithDelayHandlerAsync(string input, ILambdaContext context)
+        {
+            return this.host.ExecuteWithScopeAsync<StringFunctions, string>(function => function.ToUpperFunctionWithDelayHandlerAsync(input, context));
+        }
+    }
+
+    public static class HostExtensions
+    {
+        public static async Task<TR> ExecuteWithScopeAsync<TS, TR>(this IHost host, Func<TS, Task<TR>> predicate)
+        {
+            using (var scope = host.Services.CreateScope())
             {
                 var service = scope.ServiceProvider.GetService<TS>();
 

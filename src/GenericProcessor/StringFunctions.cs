@@ -39,6 +39,7 @@ namespace GenericProcessor
 
             context.Logger.LogLine("Logged from Lambda Context");
             this.logger.LogInformation($"Logged from {this.logger.GetType()}");
+            this.logger.LogInformation($"App Name: {this.config?.Value?.ApplicationName ?? "null"}");
 
             return input?.ToUpper();
         }
